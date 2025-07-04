@@ -3,15 +3,14 @@ name: Monitor Azure Container App
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/2 * * * *"  # Every 2 minutes
+    - cron: "*/2 * * * *"
 
 jobs:
   run-monitor:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -23,17 +22,12 @@ jobs:
 
       - name: Run monitor script
         env:
-          EMAIL: ${{ secrets.GMAIL_USER }}
-          EMAIL_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          TO_EMAIL: ${{ secrets.TO_EMAIL }}
-
-          # Required for DefaultAzureCredential
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-
-          # Optional if you're hardcoding or passing these in script
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          
+          EMAIL: ${{ secrets.GMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
         run: python python.py
